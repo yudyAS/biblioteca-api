@@ -20,6 +20,7 @@ public class CriarLivroDTO {
 
     @NotBlank
     @Size(max = 20)
+    @Pattern(regexp = "^[0-9\\-]{10,17}$", message = "ISBN deve conter 10 ou 13 dígitos com hífens opcionais")
     private String isbn;
 
     @NotNull
