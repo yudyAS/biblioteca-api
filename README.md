@@ -1,131 +1,268 @@
-# Biblioteca API
+# 📚 Biblioteca API
 
-API REST desenvolvida com Spring Boot para gerenciamento de livros e categorias.
+API REST desenvolvida com Spring Boot para gerenciamento de livros e categorias de uma biblioteca.
 
-## Tecnologias Utilizadas
+## 🚀 Tecnologias Utilizadas
 
-* Java 17
-* Spring Boot 3
-* Spring Data JPA
-* Bean Validation
-* PostgreSQL
-* H2 Database
-* Lombok
-* Swagger/OpenAPI
-* JUnit 5
-* Mockito
-* Maven
+- Java 17
+- Spring Boot 3
+- Spring Data JPA
+- Hibernate
+- H2 Database
+- PostgreSQL
+- Maven
+- JUnit 5
+- Mockito
+- JaCoCo
+- Swagger/OpenAPI
 
-## Funcionalidades
+---
+
+## 📋 Funcionalidades
 
 ### Livros
 
-* Cadastrar livro
-* Listar todos os livros
-* Buscar livro por ID
-* Atualizar livro
-* Excluir livro
-* Buscar livros por autor
-* Buscar livros por título
-* Buscar livros disponíveis
+- Cadastrar livro
+- Listar todos os livros
+- Buscar livro por ID
+- Atualizar livro
+- Excluir livro
+- Buscar por autor
+- Buscar por título
+- Listar livros disponíveis
 
 ### Categorias
 
-* Associação de livros a categorias
-* Busca de categoria por ID
-* Busca de categoria por nome
+- Associação de livros a categorias
+- Busca de categoria por ID
+- Busca de categoria por nome
 
-## Estrutura do Projeto
+---
 
-```text
-src/main/java/br/com/biblioteca
+## 📂 Estrutura do Projeto
 
-├── config
-├── controller
-├── dto
-├── exception
-├── mapper
-├── model
-├── repository
-└── service
+```
+src
+├── main
+│   ├── java
+│   │   └── br.com.biblioteca
+│   │       ├── controller
+│   │       ├── dto
+│   │       ├── exception
+│   │       ├── mapper
+│   │       ├── model
+│   │       ├── repository
+│   │       └── service
+│   └── resources
+│       ├── application.properties
+│       ├── application-dev.properties
+│       └── application-prod.properties
+└── test
 ```
 
-## Tratamento de Exceções
+---
 
-A aplicação possui tratamento global de exceções através do `GlobalExceptionHandler`.
+## ⚙️ Pré-requisitos
 
-Exceções tratadas:
+- Java 17 ou superior
+- Git
+- Maven (opcional, pois o projeto utiliza Maven Wrapper)
 
-* LivroNotFoundException
-* CategoriaNotFoundException
-* DuplicateIsbnException
-* MethodArgumentNotValidException
-* Exception
+---
 
-## Documentação Swagger
+## ▶️ Executando o Projeto
 
-Após iniciar a aplicação:
+### Clonar o repositório
 
-http://localhost:8080/swagger-ui/index.html
+```bash
+git clone URL_DO_REPOSITORIO
+```
 
-## Endpoints
+### Entrar na pasta
 
-| Método | Endpoint                    |
-| ------ | --------------------------- |
-| POST   | /api/livros                 |
-| GET    | /api/livros                 |
-| GET    | /api/livros/{id}            |
-| PUT    | /api/livros/{id}            |
-| DELETE | /api/livros/{id}            |
-| GET    | /api/livros/autor/{autor}   |
-| GET    | /api/livros/titulo/{titulo} |
-| GET    | /api/livros/disponiveis     |
+```bash
+cd biblioteca-api
+```
 
-## Testes
+### Executar aplicação
 
-Testes implementados utilizando:
+Windows:
 
-* JUnit 5
-* Mockito
-* Spring Boot Test
+```powershell
+.\mvnw.cmd spring-boot:run
+```
 
-Classes de teste:
+Linux/Mac:
 
-* LivroServiceImplTest
-* LivroControllerTest
+```bash
+./mvnw spring-boot:run
+```
 
-## Profiles
+---
+
+## 🗄️ Banco de Dados
 
 ### Desenvolvimento
 
-Profile: dev
+Banco H2 em memória.
 
-Banco:
+Console:
 
-* H2 Database
-
-### Produção
-
-Profile: prod
-
-Banco:
-
-* PostgreSQL
-
-## Executando a Aplicação
-
-```bash
-mvn spring-boot:run
+```
+http://localhost:8080/h2-console
 ```
 
-## Executando os Testes
+---
 
-```bash
-mvn test
+## 📖 Documentação Swagger
+
+Após iniciar a aplicação:
+
+```
+http://localhost:8080/swagger-ui/index.html
 ```
 
-## Gerando o Build
+---
+
+## 📌 Endpoints
+
+### Criar Livro
+
+POST
+
+```
+/api/livros
+```
+
+Exemplo:
+
+```json
+{
+  "titulo": "Clean Code",
+  "autor": "Robert C. Martin",
+  "isbn": "9780132350884",
+  "anoPublicacao": 2008
+}
+```
+
+---
+
+### Buscar Livro por ID
+
+GET
+
+```
+/api/livros/{id}
+```
+
+---
+
+### Listar Livros
+
+GET
+
+```
+/api/livros
+```
+
+---
+
+### Atualizar Livro
+
+PUT
+
+```
+/api/livros/{id}
+```
+
+---
+
+### Excluir Livro
+
+DELETE
+
+```
+/api/livros/{id}
+```
+
+---
+
+### Buscar por Autor
+
+GET
+
+```
+/api/livros/autor/{autor}
+```
+
+---
+
+### Buscar por Título
+
+GET
+
+```
+/api/livros/titulo/{titulo}
+```
+
+---
+
+### Buscar Disponíveis
+
+GET
+
+```
+/api/livros/disponiveis
+```
+
+---
+
+## 🧪 Testes
+
+Executar todos os testes:
+
+Windows:
+
+```powershell
+.\mvnw.cmd test
+```
+
+Linux/Mac:
 
 ```bash
-mvn clean package
+./mvnw test
 ```
+
+---
+
+## 📊 Cobertura de Testes (JaCoCo)
+
+Gerar relatório:
+
+Windows:
+
+```powershell
+.\mvnw.cmd test jacoco:report
+```
+
+Relatório:
+
+```
+target/site/jacoco/index.html
+```
+
+---
+
+## 👨‍💻 Equipe
+
+Projeto desenvolvido para a disciplina de POO.
+Nome dos integrantes:
+Renan Lucas Innocêncio
+Rafael Wenceslau Maximo
+Yudy Antunes dos Santos
+
+---
+
+## 📄 Licença
+
+Projeto acadêmico para fins educacionais.
