@@ -255,7 +255,11 @@ target/site/jacoco/index.html
 
 ## 👨‍💻 Equipe
 
-Projeto desenvolvido para a disciplina de Desenvolvimento Backend utilizando Spring Boot.
+Projeto desenvolvido para a disciplina de POO.
+Nome dos integrantes:
+Renan Lucas Innocêncio
+Rafael Wenceslau Maximo
+Yudy Antunes dos Santos
 
 ---
 
