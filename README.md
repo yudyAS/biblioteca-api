@@ -1,20 +1,26 @@
 # 📚 Biblioteca API
 
-API REST desenvolvida com Spring Boot para gerenciamento de livros e categorias de uma biblioteca.
+## 📖 Descrição do Projeto
+
+A Biblioteca API é uma aplicação REST desenvolvida em Java utilizando Spring Boot para gerenciamento de livros e categorias. O sistema permite cadastrar, consultar, atualizar e remover livros, além de realizar buscas por autor, título e disponibilidade.
+
+O projeto foi desenvolvido para fins acadêmicos na disciplina de Programação Orientada a Objetos (POO), aplicando conceitos de arquitetura em camadas, persistência de dados, testes automatizados e documentação de APIs.
+
+---
 
 ## 🚀 Tecnologias Utilizadas
 
-- Java 17
-- Spring Boot 3
-- Spring Data JPA
-- Hibernate
-- H2 Database
-- PostgreSQL
-- Maven
-- JUnit 5
-- Mockito
-- JaCoCo
-- Swagger/OpenAPI
+* Java 17
+* Spring Boot 3
+* Spring Data JPA
+* Hibernate
+* H2 Database
+* PostgreSQL
+* Maven
+* JUnit 5
+* Mockito
+* JaCoCo
+* Swagger/OpenAPI
 
 ---
 
@@ -22,26 +28,26 @@ API REST desenvolvida com Spring Boot para gerenciamento de livros e categorias 
 
 ### Livros
 
-- Cadastrar livro
-- Listar todos os livros
-- Buscar livro por ID
-- Atualizar livro
-- Excluir livro
-- Buscar por autor
-- Buscar por título
-- Listar livros disponíveis
+* Cadastrar livro
+* Listar todos os livros
+* Buscar livro por ID
+* Atualizar livro
+* Excluir livro
+* Buscar por autor
+* Buscar por título
+* Listar livros disponíveis
 
 ### Categorias
 
-- Associação de livros a categorias
-- Busca de categoria por ID
-- Busca de categoria por nome
+* Associação de livros a categorias
+* Busca de categoria por ID
+* Busca de categoria por nome
 
 ---
 
 ## 📂 Estrutura do Projeto
 
-```
+```text
 src
 ├── main
 │   ├── java
@@ -64,9 +70,16 @@ src
 
 ## ⚙️ Pré-requisitos
 
-- Java 17 ou superior
-- Git
-- Maven (opcional, pois o projeto utiliza Maven Wrapper)
+* Java 17 ou superior
+* Git
+* Maven (opcional, pois o projeto utiliza Maven Wrapper)
+
+Verifique as instalações:
+
+```bash
+java -version
+mvn -version
+```
 
 ---
 
@@ -108,7 +121,7 @@ Banco H2 em memória.
 
 Console:
 
-```
+```text
 http://localhost:8080/h2-console
 ```
 
@@ -118,101 +131,87 @@ http://localhost:8080/h2-console
 
 Após iniciar a aplicação:
 
-```
+```text
 http://localhost:8080/swagger-ui/index.html
 ```
 
 ---
 
-## 📌 Endpoints
+## 📌 Endpoints e Exemplos cURL
 
 ### Criar Livro
 
-POST
+POST `/api/livros`
 
+```bash
+curl -X POST http://localhost:8080/api/livros \
+-H "Content-Type: application/json" \
+-d '{
+  "titulo":"Clean Code",
+  "autor":"Robert C. Martin",
+  "isbn":"9780132350884",
+  "anoPublicacao":2008
+}'
 ```
-/api/livros
-```
-
-Exemplo:
-
-```json
-{
-  "titulo": "Clean Code",
-  "autor": "Robert C. Martin",
-  "isbn": "9780132350884",
-  "anoPublicacao": 2008
-}
-```
-
----
 
 ### Buscar Livro por ID
 
-GET
+GET `/api/livros/{id}`
 
+```bash
+curl http://localhost:8080/api/livros/1
 ```
-/api/livros/{id}
-```
-
----
 
 ### Listar Livros
 
-GET
+GET `/api/livros`
 
+```bash
+curl http://localhost:8080/api/livros
 ```
-/api/livros
-```
-
----
 
 ### Atualizar Livro
 
-PUT
+PUT `/api/livros/{id}`
 
+```bash
+curl -X PUT http://localhost:8080/api/livros/1 \
+-H "Content-Type: application/json" \
+-d '{
+  "titulo":"Clean Code 2"
+}'
 ```
-/api/livros/{id}
-```
-
----
 
 ### Excluir Livro
 
-DELETE
+DELETE `/api/livros/{id}`
 
+```bash
+curl -X DELETE http://localhost:8080/api/livros/1
 ```
-/api/livros/{id}
-```
-
----
 
 ### Buscar por Autor
 
-GET
+GET `/api/livros/autor/{autor}`
 
+```bash
+curl http://localhost:8080/api/livros/autor/Robert%20C.%20Martin
 ```
-/api/livros/autor/{autor}
-```
-
----
 
 ### Buscar por Título
 
-GET
+GET `/api/livros/titulo/{titulo}`
 
+```bash
+curl http://localhost:8080/api/livros/titulo/Clean%20Code
 ```
-/api/livros/titulo/{titulo}
-```
-
----
 
 ### Buscar Disponíveis
 
-GET
+GET `/api/livros/disponiveis`
 
-```
-/api/livros/disponiveis
+```bash
+curl http://localhost:8080/api/livros/disponiveis
 ```
 
 ---
@@ -245,24 +244,104 @@ Windows:
 .\mvnw.cmd test jacoco:report
 ```
 
+Linux/Mac:
+
+```bash
+./mvnw test jacoco:report
+```
+
 Relatório:
 
-```
+```text
 target/site/jacoco/index.html
 ```
 
 ---
 
+## 🚀 Deploy
+
+### Gerar o arquivo JAR
+
+Windows:
+
+```powershell
+.\mvnw.cmd clean package
+```
+
+Linux/Mac:
+
+```bash
+./mvnw clean package
+```
+
+Arquivo gerado:
+
+```text
+target/biblioteca-api.jar
+```
+
+### Executar em Produção
+
+```bash
+java -jar target/biblioteca-api.jar
+```
+
+### Variáveis de Ambiente
+
+Configure as seguintes variáveis:
+
+```env
+SPRING_PROFILES_ACTIVE=prod
+
+DB_URL=jdbc:postgresql://localhost:5432/biblioteca
+DB_USERNAME=postgres
+DB_PASSWORD=senha
+```
+
+### Verificação
+
+Após iniciar a aplicação:
+
+```text
+http://localhost:8080
+```
+
+---
+
+## 👥 Divisão de Tarefas
+
+### Renan Lucas Innocêncio
+
+* Desenvolvimento das entidades (Model)
+* Configuração do banco de dados
+* Criação dos repositórios
+
+### Rafael Wenceslau Maximo
+
+* Implementação dos serviços (Service)
+* Regras de negócio
+* Testes automatizados
+
+### Yudy Antunes dos Santos
+
+* Desenvolvimento dos Controllers
+* Documentação Swagger
+* README e documentação do projeto
+
+---
+
 ## 👨‍💻 Equipe
 
-Projeto desenvolvido para a disciplina de POO.
-Nome dos integrantes:
-Renan Lucas Innocêncio
-Rafael Wenceslau Maximo
-Yudy Antunes dos Santos
+Projeto desenvolvido para a disciplina de Programação Orientada a Objetos (POO).
+
+Integrantes:
+
+* Renan Lucas Innocêncio
+* Rafael Wenceslau Maximo
+* Yudy Antunes dos Santos
 
 ---
 
 ## 📄 Licença
 
-Projeto acadêmico para fins educacionais.
+Projeto acadêmico desenvolvido exclusivamente para fins educacionais.
