@@ -216,6 +216,36 @@ curl http://localhost:8080/api/livros/disponiveis
 
 ---
 
+### Buscar Livro por ID GET
+
+/api/livros/{id}
+
+### Listar Livros GET
+
+/api/livros
+
+### Atualizar Livro PUT
+
+/api/livros/{id}
+
+### Excluir Livro DELmETE
+
+/api/livros/{id}
+
+### Buscar por Autor GET
+
+/api/livros/autor/{autor}
+
+### Buscar por Título GET
+
+/api/livros/titulo/{titulo}
+
+### Buscar Disponíveis GET
+
+/api/livros/disponiveis
+
+---
+
 ## 🧪 Testes
 
 Executar todos os testes:
