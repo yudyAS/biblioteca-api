@@ -1,5 +1,6 @@
 package br.com.biblioteca.service;
 
+import br.com.biblioteca.dto.AtualizarLivroDTO;
 import br.com.biblioteca.dto.CriarLivroDTO;
 import br.com.biblioteca.dto.RespostaLivroDTO;
 import br.com.biblioteca.exception.DuplicateIsbnException;
@@ -128,6 +129,175 @@ class LivroServiceImplTest {
         assertThrows(
                 LivroNotFoundException.class,
                 () -> livroService.deletarLivro(99L)
+        );
+    }
+
+    @Test
+    void deveListarTodosLivros() {
+
+        Livro livro = new Livro();
+        livro.setId(1L);
+
+        RespostaLivroDTO dto = RespostaLivroDTO.builder()
+                .id(1L)
+                .build();
+
+        when(livroRepository.findAll())
+                .thenReturn(java.util.List.of(livro));
+
+        when(livroMapper.toRespostaDTO(livro))
+                .thenReturn(dto);
+
+        var resultado = livroService.listarTodosLivros();
+
+        assertEquals(1, resultado.size());
+    }
+
+    @Test
+    void deveBuscarPorAutor() {
+
+        Livro livro = new Livro();
+        livro.setAutor("Robert Martin");
+
+        RespostaLivroDTO dto = RespostaLivroDTO.builder()
+                .autor("Robert Martin")
+                .build();
+
+        when(livroRepository.findByAutorIgnoreCase("Robert Martin"))
+                .thenReturn(java.util.List.of(livro));
+
+        when(livroMapper.toRespostaDTO(livro))
+                .thenReturn(dto);
+
+        var resultado = livroService.buscarPorAutor("Robert Martin");
+
+        assertEquals(1, resultado.size());
+    }
+
+    @Test
+    void deveBuscarPorTitulo() {
+
+        Livro livro = new Livro();
+        livro.setTitulo("Clean Code");
+
+        RespostaLivroDTO dto = RespostaLivroDTO.builder()
+                .titulo("Clean Code")
+                .build();
+
+        when(livroRepository.findByTituloContainingIgnoreCase("Clean"))
+                .thenReturn(java.util.List.of(livro));
+
+        when(livroMapper.toRespostaDTO(livro))
+                .thenReturn(dto);
+
+        var resultado = livroService.buscarPorTitulo("Clean");
+
+        assertEquals(1, resultado.size());
+    }
+
+    @Test
+    void deveBuscarLivrosDisponiveis() {
+
+        Livro livro = new Livro();
+        livro.setDisponivel(true);
+
+        RespostaLivroDTO dto = RespostaLivroDTO.builder()
+                .disponivel(true)
+                .build();
+
+        when(livroRepository.findByDisponivel(true))
+                .thenReturn(java.util.List.of(livro));
+
+        when(livroMapper.toRespostaDTO(livro))
+                .thenReturn(dto);
+
+        var resultado = livroService.buscarDisponiveis();
+
+        assertEquals(1, resultado.size());
+    }
+
+    @Test
+    void deveDeletarLivroComSucesso() {
+
+        when(livroRepository.existsById(1L))
+                .thenReturn(true);
+
+        livroService.deletarLivro(1L);
+
+        verify(livroRepository).deleteById(1L);
+    }
+
+    @Test
+    void deveAtualizarLivroComSucesso() {
+
+        Livro livro = new Livro();
+        livro.setId(1L);
+        livro.setIsbn("123");
+
+        AtualizarLivroDTO dto = AtualizarLivroDTO.builder()
+                .titulo("Novo Titulo")
+                .autor("Novo Autor")
+                .anoPublicacao(2024)
+                .build();
+
+        RespostaLivroDTO resposta = RespostaLivroDTO.builder()
+                .id(1L)
+                .titulo("Novo Titulo")
+                .build();
+
+        when(livroRepository.findById(1L))
+                .thenReturn(Optional.of(livro));
+
+        when(livroRepository.save(livro))
+                .thenReturn(livro);
+
+        when(livroMapper.toRespostaDTO(livro))
+                .thenReturn(resposta);
+
+        RespostaLivroDTO resultado =
+                livroService.atualizarLivro(1L, dto);
+
+        assertNotNull(resultado);
+
+        verify(livroRepository).save(livro);
+    }
+
+    @Test
+    void deveLancarErroAoAtualizarComIsbnDuplicado() {
+
+        Livro livro = new Livro();
+        livro.setId(1L);
+        livro.setIsbn("123");
+
+        AtualizarLivroDTO dto = AtualizarLivroDTO.builder()
+                .isbn("999")
+                .build();
+
+        when(livroRepository.findById(1L))
+                .thenReturn(Optional.of(livro));
+
+        when(livroRepository.findByIsbn("999"))
+                .thenReturn(new Livro());
+
+        assertThrows(
+                DuplicateIsbnException.class,
+                () -> livroService.atualizarLivro(1L, dto)
+        );
+    }
+
+    @Test
+    void deveLancarErroAoAtualizarLivroInexistente() {
+
+        AtualizarLivroDTO dto = AtualizarLivroDTO.builder()
+                .titulo("Teste")
+                .build();
+
+        when(livroRepository.findById(99L))
+                .thenReturn(Optional.empty());
+
+        assertThrows(
+                LivroNotFoundException.class,
+                () -> livroService.atualizarLivro(99L, dto)
         );
     }
 }
