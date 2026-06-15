@@ -310,19 +310,19 @@ http://localhost:8080
 
 ## 👥 Divisão de Tarefas
 
-### Renan Lucas Innocêncio
+### Yudy Antunes dos Santos
 
 * Desenvolvimento das entidades (Model)
 * Configuração do banco de dados
 * Criação dos repositórios
 
-### Rafael Wenceslau Maximo
+### Renan Lucas Innocêncio
 
 * Implementação dos serviços (Service)
 * Regras de negócio
 * Testes automatizados
 
-### Yudy Antunes dos Santos
+### Rafael Wenceslau Maximo
 
 * Desenvolvimento dos Controllers
 * Documentação Swagger
