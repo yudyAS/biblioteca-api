@@ -260,7 +260,160 @@ target/site/jacoco/index.html
 
 ## 🚀 Deploy
 
-### Gerar o arquivo JAR
+### 🐳 Build Docker Local
+
+#### Pré-requisitos
+
+* Docker instalado ([Download](https://www.docker.com/products/docker-desktop))
+
+#### Build da imagem Docker
+
+```bash
+docker build -t biblioteca-api:latest .
+```
+
+#### Executar container localmente
+
+```bash
+# Desenvolvimento (com H2)
+docker run -it --rm -p 8080:8080 \
+  -e SPRING_PROFILES_ACTIVE=dev \
+  biblioteca-api:latest
+
+# Produção (com PostgreSQL)
+docker run -it --rm -p 8080:8080 \
+  -e SPRING_PROFILES_ACTIVE=prod \
+  -e DB_URL=jdbc:postgresql://localhost:5432/biblioteca \
+  -e DB_USER=postgres \
+  -e DB_PASSWORD=sua_senha \
+  biblioteca-api:latest
+```
+
+#### Testar a aplicação no container
+
+```bash
+# Em outro terminal
+curl http://localhost:8080/api/categorias
+
+# Swagger UI
+http://localhost:8080/swagger-ui/index.html
+
+# H2 Console (apenas desenvolvimento)
+http://localhost:8080/h2-console
+```
+
+#### Parar o container
+
+```bash
+docker stop <container_id>
+```
+
+---
+
+### 🌐 Deploy no Render
+
+#### Pré-requisitos
+
+* Conta no [Render](https://render.com)
+* Repositório GitHub com o projeto
+* Banco de dados PostgreSQL (Render oferece gratuitamente)
+
+#### Passo 1: Preparar o GitHub
+
+1. Faça push do projeto para o GitHub:
+
+```bash
+git add .
+git commit -m "Preparar projeto para Docker e Render"
+git push origin main
+```
+
+#### Passo 2: Criar serviço Web no Render
+
+1. Acesse [Render Dashboard](https://dashboard.render.com)
+2. Clique em **New +** → **Web Service**
+3. Selecione **Build and deploy from a Git repository**
+4. Conecte seu repositório GitHub
+5. Configure:
+   - **Name**: `biblioteca-api`
+   - **Region**: Selecione a região mais próxima
+   - **Branch**: `main`
+   - **Runtime**: `Docker`
+   - **Build Command**: (deixe em branco - Dockerfile já tem isso)
+   - **Start Command**: (deixe em branco - Dockerfile já tem isso)
+
+#### Passo 3: Configurar variáveis de ambiente
+
+No Render Dashboard, na seção **Environment**:
+
+```env
+SPRING_PROFILES_ACTIVE=prod
+PORT=8080
+JAVA_OPTS=-Xmx512m -Xms256m
+```
+
+#### Passo 4: Configurar banco de dados PostgreSQL
+
+1. No Render Dashboard, clique em **New +** → **PostgreSQL**
+2. Crie um banco de dados
+3. Copie as credenciais fornecidas
+4. No seu serviço Web, adicione as variáveis:
+   ```env
+   DB_URL=postgresql://<username>:<password>@<host>:<port>/<dbname>
+   DB_USER=<username>
+   DB_PASSWORD=<password>
+   ```
+
+> **Nota**: Render fornece as informações de conexão automaticamente. Use-as para preencher as variáveis acima.
+
+#### Passo 5: Deploy
+
+1. Após configurar tudo, clique em **Deploy**
+2. Monitore os logs em **Logs**
+3. Assim que o deployment terminar, o serviço estará disponível em:
+   ```
+   https://<seu-servico-name>.onrender.com
+   ```
+
+#### Testar após deploy
+
+```bash
+# Listar categorias
+curl https://<seu-servico-name>.onrender.com/api/categorias
+
+# Swagger UI
+https://<seu-servico-name>.onrender.com/swagger-ui/index.html
+```
+
+#### Monitorar a aplicação
+
+- **Logs**: Render Dashboard → Seu serviço → **Logs**
+- **Métricas**: Render Dashboard → Seu serviço → **Metrics**
+- **Health Check**: O Dockerfile inclui verificação de saúde automática
+
+---
+
+### 🛠️ Troubleshooting - Deploy no Render
+
+#### Erro: "Port is already in use"
+
+- Render define a porta automaticamente via variável `PORT`
+- Certifique-se de que `server.port=${PORT:8080}` está em `application.properties`
+
+#### Erro: "Database connection refused"
+
+- Verifique se as variáveis `DB_URL`, `DB_USER`, `DB_PASSWORD` estão corretas
+- Certifique-se de que o banco PostgreSQL está em execução
+- Verifique os logs no Render Dashboard
+
+#### Aplicação muito lenta no Render
+
+- Aumente a memória: `JAVA_OPTS=-Xmx1024m -Xms512m`
+- Use um plano pago no Render com mais recursos
+
+---
+
+### 📦 Gerar o arquivo JAR localmente
 
 Windows:
 
@@ -277,26 +430,36 @@ Linux/Mac:
 Arquivo gerado:
 
 ```text
-target/biblioteca-api.jar
+target/biblioteca-api-0.0.1-SNAPSHOT.jar
 ```
 
-### Executar em Produção
+### ▶️ Executar em Produção
 
 ```bash
-java -jar target/biblioteca-api.jar
+# Com H2 (desenvolvimento)
+java -jar target/biblioteca-api-*.jar
+
+# Com PostgreSQL (produção)
+java -jar target/biblioteca-api-*.jar \
+  --spring.profiles.active=prod \
+  --spring.datasource.url=jdbc:postgresql://localhost:5432/biblioteca \
+  --spring.datasource.username=postgres \
+  --spring.datasource.password=senha
 ```
 
-### Variáveis de Ambiente
+### 🔧 Variáveis de Ambiente
 
-Configure as seguintes variáveis:
+Configure as seguintes variáveis para produção:
 
 ```env
 SPRING_PROFILES_ACTIVE=prod
-
-DB_URL=jdbc:postgresql://localhost:5432/biblioteca
-DB_USERNAME=postgres
-DB_PASSWORD=senha
+PORT=8080
+DB_URL=jdbc:postgresql://host:5432/database
+DB_USER=username
+DB_PASSWORD=password
+JAVA_OPTS=-Xmx512m -Xms256m
 ```
+
 
 ### Verificação
 

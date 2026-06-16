@@ -31,3 +31,19 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Docker ###
+.docker/
+*.log
+
+### Environment variables ###
+.env
+.env.local
+.env.*.local
+
+### OS ###
+.DS_Store
+*.swp
+*.swo
+*~
+
